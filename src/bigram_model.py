@@ -24,7 +24,10 @@ def bigrams_count_to_probabilities(
     # Normalize each row to sum to 1, converting counts to probabilities, remember to add smooth_factor
     # TODO
     count_smoothed: torch.Tensor = bigram_counts + smooth_factor
-    bigram_probabilities: torch.Tensor = count_smoothed / count_smoothed.sum(dim=1, keepdim=True)
+    row_sums = count_smoothed.sum(dim=1, keepdim=True)
+    row_sums[row_sums == 0] = 1  
+    bigram_probabilities = count_smoothed / row_sums
+
 
 
     return bigram_probabilities
@@ -175,7 +178,7 @@ def calculate_log_likelihood(
     """
     # Add start and end characters to the word
     # TODO
-    processed_word: str = str(start_token) + word + str(end_token)
+    processed_word: str = word + str(end_token)
 
     # Initialize log likelihood
     # TODO

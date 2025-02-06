@@ -32,17 +32,15 @@ def load_and_preprocess_data(
     # TODO
     bigrams: List[Tuple[str, str]] = []
 
-    for line in lines:
-        for word in line.split(): 
-            if word.isalpha(): 
-                word = word.lower()
-                word = start_token + word + end_token
-                for i in range(len(word)-1):
+    with open(filepath, "r") as file:
+        for line in file.read().splitlines():
+            word = line.split()[0].lower()
+            if len(word) > 0:
+                bigrams.append((start_token, word[0]))
+                for i in range(len(word) - 1):
                     bigrams.append((word[i], word[i+1]))
-
+                bigrams.append((word[-1], end_token))
     return bigrams
-
-
 
 def char_to_index(alphabet: str, start_token: str, end_token: str) -> Dict[str, int]:
     """
@@ -62,7 +60,6 @@ def char_to_index(alphabet: str, start_token: str, end_token: str) -> Dict[str, 
 
     for i, char in enumerate(alphabet):
         char_to_idx[char] = i + 1
-
     return char_to_idx
 
 
